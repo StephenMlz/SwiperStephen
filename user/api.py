@@ -10,12 +10,13 @@ def submit_phone(request):
         #生成验证码
         #向短信平台发送验证码
         if send_vcode(phonenum):
+            print(phonenum)
             return render_json(None)
         else:
             return render_json(None,errors.PLATFORM_ERR)
 
     else:
-        return render_json({'error':errors.PHONE_ERR})
+        return render_json(None,errors.PHONE_ERR)
 
 def submit_vcode(request):
 

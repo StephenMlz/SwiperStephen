@@ -30,9 +30,11 @@ def send_vcode(phonenum):
     params['mobile'] = phonenum
     params['param'] = gen_rand_code()
     response = requests.post(config.YZX_SMS_API,json=params)
+    # print(response.content)
+    print(response.json())
     if response.status_code == 200:
         result = response.json()
-        if result.get('msg') == 'ok':
+        if result.get('msg') == 'OK':
             return True
     return False
 
