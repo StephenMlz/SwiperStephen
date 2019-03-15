@@ -1,16 +1,12 @@
-'''
- -*- coding: utf-8 -*-
- @Time : 19-3-14 下午1:05
- @Author : SamSa
- @Site : 
- @File : logics.py.py
- @Software: PyCharm
-'''
+
 import re
 from random import  randrange
-
+from common import keys
 from swiper import config
 import requests
+from django.core.cache import cache
+from copy import copy
+
 
 def is_phonenum(phonenum):
     #检查参数是否是手机号
@@ -26,9 +22,13 @@ def gen_rand_code(length=4):
 
 def send_vcode(phonenum):
     #向第三方平台发送验证码
+    vcode = gen_rand_code()
+    #将验证码放入缓存，并设置过期时间
+    cache.set(keys.VCODE %phonenum,vcode,180)
+
     params = config.YZX_SMS_PARAMS.copy()
     params['mobile'] = phonenum
-    params['param'] = gen_rand_code()
+    params['param'] = vcode
     response = requests.post(config.YZX_SMS_API,json=params)
     # print(response.content)
     print(response.json())

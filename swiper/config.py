@@ -13,7 +13,7 @@ YZX_SMS_PARAMS = {
     'sid':'fdeebd68140f4cac40b4032729b71890',
     'token':'0d8f1ccbc09641a38600fe7bcb3dfe2d',
     'appid':'77f3370afd614feea3c892fcdba2b128',
-    'templateid':'442885',
+    'templateid':'442895',
     'param':None,
     'mobile':None,
 
