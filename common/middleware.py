@@ -6,7 +6,7 @@ class AuthMiddleware(MiddlewareMixin):
     '''设置登录url白名单'''
     WHITE_LIST = [
         'api/user/submit_phone',
-        # 'api/user/submit_vcode',
+        'api/user/submit_vcode',
     ]
 
     def process_request(self,request):
