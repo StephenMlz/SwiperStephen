@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+from libs.orm import ModelMixin
 
 class User(models.Model):
     SEX = (
@@ -55,7 +56,7 @@ class User(models.Model):
         return  self._profile
 
 
-class Profile(models.Model):
+class Profile(models.Model,ModelMixin):
     '''个人资料'''
     SEX = (
         ('male','男性'),

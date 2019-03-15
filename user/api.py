@@ -7,6 +7,7 @@ from django.core.cache import cache
 from user.models import User
 
 
+
 def submit_phone(request):
     #提交手机号，发送验证码
     phonenum = request.POST.get('phonenum')
@@ -23,16 +24,29 @@ def submit_phone(request):
         return render_json(code=errors.PHONE_ERR)
 
 def submit_vcode(request):
+    '''从缓存取出验证码，并与输入的验证码进行验证，验证成功，进行注册或登录'''
     phone = request.POST.get('phonenum')
     vcode = request.POST.get('vcode')
     nickname = request.POST.get('nickname')
     cached_vcode = cache.get(keys.VCODE % phone)
     if vcode == cached_vcode:
+        '''执行登录，注册'''
         user, _ = User.objects.get_or_create(phonenum=phone,nickname=nickname)
         request.session['uid'] = user.id
         return render_json(data=user.to_dict())
     else:
         return render_json(code=errors.VCODE_ERR)
 
-
+def get_profile(request):
+    '''获取个人资料'''
+    user = request.user
+    return render_json(data=user.profile.to_dict('vibration','only_match','auto_play'))
+def set_profile(request):
+    '''修改个人资料'''
+    user = request.user
+    pass
+def upload_avatar(request):
+    '''上传个人头像'''
+    user = request.user
+    pass
 
