@@ -2,6 +2,7 @@ from django.db import models
 import datetime
 from libs.orm import ModelMixin
 
+'''用户资料'''
 class User(models.Model):
     SEX = (
         ('male','男性'),
@@ -50,14 +51,16 @@ class User(models.Model):
 
     @property
     def profile(self):
-        '''首先判断，user和profile是一对一的关系，其次为了提高数据库的读写效率，此处省略外键，用给user添加profile属性的方式，让两张表建立联系'''
+        '''首先确定user和profile是一对一的关系，其次为了提高数据库的读写效率，此处省略外键，用给user添加profile属性(函数)的方式，让两张表建立联系'''
         if not hasattr(self,'_profile'):
+            '''通过判断当前user实例是否拥有_profile属性来判断是否给user赋予profile属性，以提醒用户输入交友需求'''
             self._profile, _  = Profile.objects.get_or_create(id=self.id)
         return  self._profile
 
 
+'''用户交友需求'''
 class Profile(models.Model,ModelMixin):
-    '''个人资料'''
+
     SEX = (
         ('male','男性'),
         ('female','女性'),

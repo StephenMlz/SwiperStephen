@@ -43,7 +43,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'common.middleware.AuthMiddleware'
+    'common.middleware.AuthMiddleware' #此处应用自定义的登录认证中间件
 ]
 
 ROOT_URLCONF = 'swiper.urls'

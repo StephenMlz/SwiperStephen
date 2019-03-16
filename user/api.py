@@ -5,6 +5,7 @@ from common import errors
 from common import keys
 from django.core.cache import cache
 from user.models import User
+from user.forms import  ProfileForm
 
 
 
@@ -30,7 +31,7 @@ def submit_vcode(request):
     nickname = request.POST.get('nickname')
     cached_vcode = cache.get(keys.VCODE % phone)
     if vcode == cached_vcode:
-        '''执行登录，注册'''
+        '''执行登录注册'''
         user, _ = User.objects.get_or_create(phonenum=phone,nickname=nickname)
         request.session['uid'] = user.id
         return render_json(data=user.to_dict())
@@ -41,10 +42,21 @@ def get_profile(request):
     '''获取个人资料'''
     user = request.user
     return render_json(data=user.profile.to_dict('vibration','only_match','auto_play'))
+
+
 def set_profile(request):
     '''修改个人资料'''
-    user = request.user
-    pass
+    form = ProfileForm(request.POST)
+    if form.is_valid():
+        '''如果通过post传过来的参数全部有效'''
+        profile = form.save(commit=False)
+        profile.id = request.user.id
+        profile.save()
+        return render_json()
+    else:
+        return render_json(form.errors,code=errors.PROFILE_ERR)
+
+
 def upload_avatar(request):
     '''上传个人头像'''
     user = request.user

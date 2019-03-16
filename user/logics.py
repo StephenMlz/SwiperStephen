@@ -10,7 +10,7 @@ from copy import copy
 
 def is_phonenum(phonenum):
     #检查参数是否是手机号
-     pattern = r'(13\d|15[012356789]|166|17[78]|18[0126789]|199)\d{8}$'
+     pattern = r'(13\d|15[012356789]|166|17[78]|18[01256789]|199)\d{8}$'
      return True if re.match(pattern,phonenum) else False
 
 def gen_rand_code(length=4):
@@ -31,7 +31,7 @@ def send_vcode(phonenum):
     params['param'] = vcode
     response = requests.post(config.YZX_SMS_API,json=params)
     # print(response.content)
-    print(response.json())
+    # print(response.json())
     if response.status_code == 200:
         result = response.json()
         if result.get('msg') == 'OK':
