@@ -1,9 +1,12 @@
 from django import forms
 
 from user.models import  Profile
+
+'''定义form表单，验证prfile传入参数的准确性'''
 class ProfileForm(forms.ModelForm):
+
     class Meta:
-        model = Profile
+        model = Profile #指定model参数所对应的model
         fields = [
         'dating_sex','location',
         'min_distance','max_distance',

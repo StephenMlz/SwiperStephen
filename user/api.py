@@ -46,10 +46,10 @@ def get_profile(request):
 
 def set_profile(request):
     '''修改个人资料'''
-    form = ProfileForm(request.POST)
+    form = ProfileForm(request.POST)  #通过request.POST 传入所有输入的参数
     if form.is_valid():
         '''如果通过post传过来的参数全部有效'''
-        profile = form.save(commit=False)
+        profile = form.save(commit=False) #通过调用save方法返回当前model实例
         profile.id = request.user.id
         profile.save()
         return render_json()
