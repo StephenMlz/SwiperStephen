@@ -1,11 +1,4 @@
-'''
- -*- coding: utf-8 -*-
- @Time : 19-3-14 下午7:09
- @Author : SamSa
- @Site : 
- @File : config.py
- @Software: PyCharm
-'''
+
 #项目逻辑配置及第三方平台配置
 #云之讯短信平台配置
 YZX_SMS_API = 'https://open.ucpaas.com/ol/sms/sendsms'
