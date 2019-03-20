@@ -55,6 +55,8 @@ class User(models.Model):
         if not hasattr(self,'_profile'):
             '''通过判断当前user实例是否拥有_profile属性来判断是否给user赋予profile属性，以提醒用户输入交友需求'''
             self._profile, _  = Profile.objects.get_or_create(id=self.id)
+            '''get_or_create方法的返回值是由(object, created)组成的元组，元组中的object 是一个查询到的或者是被创建的对象， 
+            created 是一个表示是否创建了新的对象的布尔值，如果创建了则created为True，反之亦然'''
         return  self._profile
 
 

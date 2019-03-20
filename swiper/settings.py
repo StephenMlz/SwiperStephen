@@ -113,3 +113,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#定义文件存储路径,并且在.gitingore文件里面忽略，防止将文件上传到github
+MEDIA_ROOT = 'medias'

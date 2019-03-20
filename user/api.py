@@ -6,6 +6,7 @@ from common import keys
 from django.core.cache import cache
 from user.models import User
 from user.forms import  ProfileForm
+from user.logics import save_upload_file
 
 
 
@@ -46,7 +47,7 @@ def get_profile(request):
 
 def set_profile(request):
     '''修改个人资料'''
-    form = ProfileForm(request.POST)  #通过request.POST 传入所有输入的参数
+    form = ProfileForm(request.POST)  #通过request.POST 传入所有输入的参数,如果是文件就传入第二个参数
     if form.is_valid():
         '''如果通过post传过来的参数全部有效'''
         profile = form.save(commit=False) #通过调用save方法返回当前model实例
@@ -54,11 +55,13 @@ def set_profile(request):
         profile.save()
         return render_json()
     else:
-        return render_json(form.errors,code=errors.PROFILE_ERR)
+        return render_json(form.errors,code=errors.PROFILE_ERR)  #form.errors把具体的错误传给前端
 
 
 def upload_avatar(request):
     '''上传个人头像'''
-    user = request.user
-    pass
+    avatar = request.FILES.get('avatar')
+    filename = 'Avatar-%s'% request.user.id
+    save_upload_file(filename,avatar)
+
 

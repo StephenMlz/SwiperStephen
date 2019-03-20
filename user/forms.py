@@ -1,7 +1,7 @@
 from django import forms
 
-from user.models import  Profile
 
+from user.models import  Profile
 '''定义form表单，验证prfile传入参数的准确性'''
 class ProfileForm(forms.ModelForm):
 

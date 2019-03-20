@@ -1,10 +1,11 @@
-
+import os
 import re
 from random import  randrange
 from common import keys
 from swiper import config
 import requests
 from django.core.cache import cache
+from django.conf import settings
 from copy import copy
 
 
@@ -39,3 +40,8 @@ def send_vcode(phonenum):
     return False
 
 
+def save_upload_file(filename,upload_file):
+    filepath = os.path.join(settings.BASE_DIR,settings.MEDIA_ROOT,filename)
+    with open(filepath,'wb') as newfile:
+        for chunk in upload_file.chunks():
+            newfile.write(chunk)

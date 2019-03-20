@@ -6,3 +6,5 @@ PHONE_ERR = 1001  #手机号错误
 VCODE_ERR = 1002 #无效的验证码
 LOGIN_REQUIRE = 1003 #用户未登录
 PROFILE_ERR = 1004
+USER_DoesNotExist_ERR = 1005 #用户不存在
+
