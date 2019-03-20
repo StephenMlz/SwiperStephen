@@ -11,3 +11,12 @@ YZX_SMS_PARAMS = {
     'mobile':None,
 
 }
+
+#七牛云配置
+
+QN_ACCESSKEY = ''
+QN_SECRETKEY = ''
+QN_HOST = ''
+QN_BUCKET = ''
+
+

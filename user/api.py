@@ -7,10 +7,13 @@ from django.core.cache import cache
 from user.models import User
 from user.forms import  ProfileForm
 from user.logics import save_upload_file
+from libs.qncolud import upload_qncloud
+from urllib.parse import urljoin
+from swiper import config
 
 
 
-def submit_phone(request):
+def get_vcode(request):
     #提交手机号，发送验证码
     phonenum = request.POST.get('phonenum')
     if is_phonenum(phonenum):
@@ -25,7 +28,7 @@ def submit_phone(request):
     else:
         return render_json(code=errors.PHONE_ERR)
 
-def submit_vcode(request):
+def check_vcode(request):
     '''从缓存取出验证码，并与输入的验证码进行验证，验证成功，进行注册或登录'''
     phone = request.POST.get('phonenum')
     vcode = request.POST.get('vcode')
@@ -60,8 +63,29 @@ def set_profile(request):
 
 def upload_avatar(request):
     '''上传个人头像'''
+    user = request.user
+    #获取文件
     avatar = request.FILES.get('avatar')
-    filename = 'Avatar-%s'% request.user.id
-    save_upload_file(filename,avatar)
+
+    #定义文件名
+    filename = 'Avatar-%s'% user.id
+
+    #将文件保存到本地服务器
+    filename,filepath = save_upload_file(filename,avatar)
+
+    #将文件上传到云服务器，本地的文件用脚本定期删除掉即可
+    upload_qncloud(filename,filepath)
+
+    #记录头像文件的url
+    user.avatar = urljoin(config.QN_HOST,filename)
+    user.save()
+
+    return render_json()
+
+
+
+
+
+
 
 

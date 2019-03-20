@@ -45,3 +45,6 @@ def save_upload_file(filename,upload_file):
     with open(filepath,'wb') as newfile:
         for chunk in upload_file.chunks():
             newfile.write(chunk)
+
+    return filename,filepath
+
