@@ -25,7 +25,6 @@ def send_vcode(phonenum):
     #向第三方平台发送验证码
     vcode = gen_rand_code()
     #将验证码放入缓存，并设置过期时间
-    cache.set(keys.VCODE %phonenum,vcode,180)
 
     params = config.YZX_SMS_PARAMS.copy()
     params['mobile'] = phonenum
@@ -36,6 +35,7 @@ def send_vcode(phonenum):
     if response.status_code == 200:
         result = response.json()
         if result.get('msg') == 'OK':
+            cache.set(keys.VCODE % phonenum, vcode, 180)
             return True
     return False
 

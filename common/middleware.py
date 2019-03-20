@@ -15,7 +15,7 @@ class AuthMiddleware(MiddlewareMixin):
         '''如果请求在白名单中，就返回，不执行此中间件,如果请求不在白名单中，则需要进行登录验证'''
         print(request.path)
         if request.path in self.WHITE_LIST:
-            return HttpResponse('123')
+            return
         #检查用户是否存在，不存在，返回错误码，存在则给request赋予user属性
         uid = request.session.get('uid')
         if not uid:
