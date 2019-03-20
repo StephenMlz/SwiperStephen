@@ -61,7 +61,7 @@ def upload_avatar(request):
     user = request.user
     #获取文件
     avatar = request.FILES.get('avatar')
-
+    #celery异步调用，实现文件快速上传
     save_avatar.delay(user, avatar)
 
     return render_json()
