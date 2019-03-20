@@ -1,13 +1,15 @@
 import os
 import re
 from random import  randrange
+from urllib.parse import urljoin
+
 from common import keys
+from libs.qncolud import upload_qncloud
 from swiper import config
 import requests
 from django.core.cache import cache
 from django.conf import settings
-from copy import copy
-
+from worker import celery_app
 
 def is_phonenum(phonenum):
     #检查参数是否是手机号
@@ -41,6 +43,7 @@ def send_vcode(phonenum):
 
 
 def save_upload_file(filename,upload_file):
+    '''封装函数，将文件保存到本地服务器'''
     filepath = os.path.join(settings.BASE_DIR,settings.MEDIA_ROOT,filename)
     with open(filepath,'wb') as newfile:
         for chunk in upload_file.chunks():
@@ -48,3 +51,20 @@ def save_upload_file(filename,upload_file):
 
     return filename,filepath
 
+
+'''加上celery装饰器，声明此方法需要被django异步调用'''
+@celery_app.task
+def save_avatar(user,avatar):
+    '''异步实现图片的上传'''
+    # 定义文件名
+    filename = 'Avatar-%s' % user.id
+
+    # 将文件保存到本地服务器
+    filename, filepath = save_upload_file(filename, avatar)
+
+    # 将文件上传到云服务器，本地的文件用脚本定期删除掉即可
+    upload_qncloud(filename, filepath)
+
+    # 记录头像文件的url
+    user.avatar = urljoin(config.QN_HOST, filename)
+    user.save()

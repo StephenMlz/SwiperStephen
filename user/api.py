@@ -1,4 +1,4 @@
-from user.logics import is_phonenum
+from user.logics import is_phonenum, save_avatar
 from user.logics import send_vcode
 from libs.http import render_json
 from common import errors
@@ -6,11 +6,6 @@ from common import keys
 from django.core.cache import cache
 from user.models import User
 from user.forms import  ProfileForm
-from user.logics import save_upload_file
-from libs.qncolud import upload_qncloud
-from urllib.parse import urljoin
-from swiper import config
-
 
 
 def get_vcode(request):
@@ -62,23 +57,12 @@ def set_profile(request):
 
 
 def upload_avatar(request):
-    '''上传个人头像'''
+    '''上传个人头像,先保存到本地，再上传到七牛云服务器'''
     user = request.user
     #获取文件
     avatar = request.FILES.get('avatar')
 
-    #定义文件名
-    filename = 'Avatar-%s'% user.id
-
-    #将文件保存到本地服务器
-    filename,filepath = save_upload_file(filename,avatar)
-
-    #将文件上传到云服务器，本地的文件用脚本定期删除掉即可
-    upload_qncloud(filename,filepath)
-
-    #记录头像文件的url
-    user.avatar = urljoin(config.QN_HOST,filename)
-    user.save()
+    save_avatar.delay(user, avatar)
 
     return render_json()
 
