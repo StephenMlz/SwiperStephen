@@ -27,6 +27,7 @@ def send_vcode(phonenum):
     #向第三方平台发送验证码
     vcode = gen_rand_code()
     #将验证码放入缓存，并设置过期时间
+    print(vcode)
 
     params = config.YZX_SMS_PARAMS.copy()
     params['mobile'] = phonenum
@@ -37,7 +38,7 @@ def send_vcode(phonenum):
     if response.status_code == 200:
         result = response.json()
         if result.get('msg') == 'OK':
-            cache.set(keys.VCODE % phonenum, vcode, 180)
+            cache.set(keys.VCODE % phonenum, vcode, 600)
             return True
     return False
 
@@ -68,3 +69,4 @@ def save_avatar(user,avatar):
     # 记录头像文件的url
     user.avatar = urljoin(config.QN_HOST, filename)
     user.save()
+    return user.avatar
