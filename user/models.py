@@ -87,7 +87,7 @@ class Profile(models.Model,ModelMixin):
     min_distance = models.IntegerField(default=1,verbose_name='最小查找范围')
     max_distance = models.IntegerField(default=10,verbose_name='最大查找范围')
     min_dating_age = models.IntegerField(default=18,verbose_name='最小交友年龄')
-    max_dating_age = models.IntegerField(default=30,verbose_name='最大交友年龄')
+    max_dating_age = models.IntegerField(default=50,verbose_name='最大交友年龄')
     vibration = models.BooleanField(default=True,verbose_name='是否开启震动')
     only_match = models.BooleanField(default=True,verbose_name='不让未匹配的人查看我的相册')
     auto_play = models.BooleanField(default=True,verbose_name='自动播放视频')

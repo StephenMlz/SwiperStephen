@@ -13,7 +13,7 @@ from worker import celery_app
 
 def is_phonenum(phonenum):
     #检查参数是否是手机号
-     pattern = r'(13\d|15[012356789]|166|17[78]|18[01256789]|199)\d{8}$'
+     pattern = r'(13\d|15[012356789]|166|17[678]|18[01256789]|199)\d{8}$'
      return True if re.match(pattern,phonenum) else False
 
 def gen_rand_code(length=4):
@@ -27,7 +27,6 @@ def send_vcode(phonenum):
     #向第三方平台发送验证码
     vcode = gen_rand_code()
     #将验证码放入缓存，并设置过期时间
-    print(vcode)
 
     params = config.YZX_SMS_PARAMS.copy()
     params['mobile'] = phonenum
@@ -38,6 +37,7 @@ def send_vcode(phonenum):
     if response.status_code == 200:
         result = response.json()
         if result.get('msg') == 'OK':
+            print(vcode)
             cache.set(keys.VCODE % phonenum, vcode, 600)
             return True
     return False
