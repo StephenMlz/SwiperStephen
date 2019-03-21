@@ -14,9 +14,9 @@ YZX_SMS_PARAMS = {
 
 #七牛云配置
 
-QN_ACCESSKEY = ''
-QN_SECRETKEY = ''
-QN_HOST = ''
-QN_BUCKET = ''
+QN_ACCESSKEY = 'cbmm1aqdw-1IF-05ByHR-UdFksPoSgcFsC2B-vjd'
+QN_SECRETKEY = 'J2VfG-gMl9v2hAvfKQWqYFSQYqVIyNhkfXORDpvV'
+QN_HOST = 'pop3uuzr1.bkt.clouddn.com'
+QN_BUCKET = 'stephenmoo'
 
 
