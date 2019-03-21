@@ -1,5 +1,6 @@
+# !/usr/bin/env python
+
 '''脚本文件夹是一个独立的文件夹，它不能被其他模块调用,如果shell调用，要配置环境'''
-#!/usr/bin/env python
 import os
 import sys
 import random
@@ -11,6 +12,7 @@ sys.path.insert(0,BASE_DIR)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "swiper.settings")
 django.setup()
 
+from django.db.utils import IntegrityError
 
 from user.models import User
 
@@ -56,8 +58,7 @@ first_names = {
         '雨灵','凝安','羽馨','婕珍','佳琦','韵寒','博嘉','诗珊','雅霜',]
 }
 
-def gen_rand_name(n):
-    for i in range(n):
+def gen_rand_name():
         last_name = random.choice(last_names)
 
         sex = random.choice(list(first_names.keys()))
@@ -65,8 +66,26 @@ def gen_rand_name(n):
 
         first_name = random.choice(first_names.get(sex))
 
-        name = last_name + first_name
+        name = ''.join([last_name,first_name])
 
         print(name,sex)
+        return name,sex
 
-gen_rand_name(50)
+def create_robot(n):
+    for i in range(n):
+        name,sex = gen_rand_name()
+        try:
+            User.objects.create(phonenum=random.randint(21000000000,21900000000),
+                                nickname=name,
+                                sex=sex,
+                                birth_year=random.randint(1970,2018),
+                                birth_month=random.randint(1,12),
+                                birth_day=random.randint(1,28),
+                                location=['bj','sh','gz','sz','cd','xa','wh','zz','nj','xm','hz','sy'])
+            print('created:%s %s'%(name,sex))
+        except django.db.utils.IntegrityError:
+            pass
+
+
+if __name__ == '__main__':
+    create_robot(5000)
