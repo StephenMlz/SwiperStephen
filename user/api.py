@@ -28,10 +28,15 @@ def check_vcode(request):
     phone = request.POST.get('phonenum')
     vcode = request.POST.get('vcode')
     nickname = request.POST.get('nickname')
+
     cached_vcode = cache.get(keys.VCODE % phone)
     if vcode == cached_vcode:
         '''执行登录注册'''
-        user, _ = User.objects.get_or_create(phonenum=phone,nickname=nickname)
+        try:
+            user = User.objects.get(phonenum=phone)
+        except User.DoesNotExist:
+            user = User.objects.create(phonenum=phone,nickname=nickname)
+
         request.session['uid'] = user.id
         return render_json(data=user.to_dict())
     else:
