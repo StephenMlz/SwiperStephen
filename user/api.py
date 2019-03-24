@@ -18,10 +18,10 @@ def get_vcode(request):
             print(phonenum)
             return render_json()
         else:
-            return render_json(code=errors.PLATFORM_ERR)
+            raise errors.PLATFORM_ERR
 
     else:
-        return render_json(code=errors.PHONE_ERR)
+        raise errors.PHONE_ERR()
 
 def check_vcode(request):
     '''从缓存取出验证码，并与输入的验证码进行验证，验证成功，进行注册或登录'''
@@ -35,7 +35,7 @@ def check_vcode(request):
         request.session['uid'] = user.id
         return render_json(data=user.to_dict())
     else:
-        return render_json(code=errors.VCODE_ERR)
+        raise errors.VCODE_ERR
 
 def get_profile(request):
     '''获取个人资料'''
@@ -53,7 +53,7 @@ def set_profile(request):
         profile.save()
         return render_json()
     else:
-        return render_json(form.errors,code=errors.PROFILE_ERR)  #form.errors把具体的错误传给前端
+        raise errors.PROFILE_ERR(form.errors)  #form.errors把具体的错误传给前端
 
 
 def upload_avatar(request):

@@ -44,7 +44,8 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'common.middleware.AuthMiddleware' #此处应用自定义的登录认证中间件
+    'common.middleware.AuthMiddleware' ,#此处应用自定义的登录认证中间件
+    'common.middleware.LogicMiddleware' ##定义异常类中间件：当抛出异常时，异常类中间件先捕获到，并在中间件进行处理
 ]
 
 ROOT_URLCONF = 'swiper.urls'

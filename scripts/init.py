@@ -81,7 +81,8 @@ def create_robot(n):
                                 birth_year=random.randint(1970,2018),
                                 birth_month=random.randint(1,12),
                                 birth_day=random.randint(1,28),
-                                location=['bj','sh','gz','sz','cd','xa','wh','zz','nj','xm','hz','sy'])
+                                location=random.choice(['bj','sh','gz','sz','cd','xa','wh','zz','nj','xm','hz','sy'])
+                                )
             print('created:%s %s'%(name,sex))
         except django.db.utils.IntegrityError:
             pass

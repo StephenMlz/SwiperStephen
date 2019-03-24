@@ -18,10 +18,20 @@ class AuthMiddleware(MiddlewareMixin):
         #检查用户是否存在，不存在，返回错误码，存在则为request赋予user属性
         uid = request.session.get('uid')
         if not uid:
-            return render_json(code=errors.LOGIN_REQUIRE)
+            return render_json(code=errors.LOGIN_REQUIRED.code)
 
         else:
             try:
                 request.user = User.objects.get(id=uid)
+                return
             except User.DoesNotExist:
-                return render_json(code=errors.USER_DoesNotExist_ERR)
+                return render_json(code=errors.USERNOTEXIST.code)
+
+
+class LogicMiddleware(MiddlewareMixin):
+    #定义异常类中间件：当抛出异常时，异常类中间件先捕获到，并在中间件进行处理
+
+    def process_exception(self,request,exception):
+        if isinstance(exception,errors.LogicError):
+            data = exception.data or str(exception)  #判断exception 是否是LogicError的实例
+            return render_json(data=data,code=exception.code)
