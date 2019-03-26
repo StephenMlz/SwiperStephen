@@ -3,7 +3,6 @@ from social.logics import get_rcmd
 from libs.http import render_json
 from social.models import Swiped
 from user.models import User
-from vip.decorator import dec
 from vip.logics import need_perm
 
 
@@ -41,12 +40,14 @@ def superlike(request):
 
     return render_json({'is_matched': matched})
 
+
 @need_perm('rewind')
 def rewind(request):
     '''反悔'''
     logics.rewind(request.user)
 
     return render_json()
+
 @need_perm('show_liked_me')
 def show_liked_me(request):
     '''查看喜欢我的用户'''

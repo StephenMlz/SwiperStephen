@@ -1,6 +1,6 @@
 from django.db import models
 import datetime
-from libs.orm import ModelMixin
+# from libs.orm import ModelMixin
 from vip.models import Vip
 
 '''用户资料'''
@@ -73,7 +73,7 @@ class User(models.Model):
         return  self._vip
 
 '''用户交友需求'''
-class Profile(models.Model,ModelMixin):
+class Profile(models.Model):
 
     SEX = (
         ('male','男性'),

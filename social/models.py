@@ -21,9 +21,9 @@ class Swiped(models.Model):
             raise errors.STYPE_ERR
 
         #使用get_or_create来避免重复创建滑动记录
-        swiped, _ =  cls.objects.get_or_create(uid=uid,sid=sid,flag=stype)
+        swiped, _ =  cls.get_or_create(uid=uid,sid=sid,flag=stype)
 
-        return swiped
+        return swiped,False
 
     @classmethod
     def is_liked(cls,uid,sid):
@@ -49,9 +49,9 @@ class Friend(models.Model):
         #好友id不分顺序，自动排序,但要确定一条好友关系，是唯一的，所以要为ID排序
         uid1,uid2 = (uid2,uid1) if uid1 > uid2 else (uid1,uid2)
 
-        friends, _ = cls.objects.get_or_create(uid1=uid1,uid2=uid2)
+        friends, _ = cls.get_or_create(uid1=uid1,uid2=uid2)
 
-        return friends
+        return friends,False
 
     @classmethod
     def break_off(cls,uid1,uid2):

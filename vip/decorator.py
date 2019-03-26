@@ -1,6 +1,6 @@
 from common.errors import PermissonRequired
 
-'''VIP认证装饰器'''
+'''VIP权限检查装饰器,另外写的一个简单装饰器'''
 def dec(func):
     def wrapper(request):
         user = request.user

@@ -1,7 +1,11 @@
+import logging
+
 from django.utils.deprecation import MiddlewareMixin
 from common import errors
 from libs.http import render_json
 from user.models import User
+
+err_log = logging.getLogger('err')
 
 class AuthMiddleware(MiddlewareMixin):
     '''设置登录url白名单'''
@@ -18,6 +22,7 @@ class AuthMiddleware(MiddlewareMixin):
         #检查用户是否存在，不存在，返回错误码，存在则为request赋予user属性
         uid = request.session.get('uid')
         if not uid:
+            err_log.error('%s : %s' % (errors.LOGIN_REQUIRED.code, errors.LOGIN_REQUIRED()))
             return render_json(code=errors.LOGIN_REQUIRED.code)
 
         else:
@@ -25,6 +30,7 @@ class AuthMiddleware(MiddlewareMixin):
                 request.user = User.objects.get(id=uid)
                 return
             except User.DoesNotExist:
+                err_log.error('%s : %s' % (errors.USERNOTEXIST.code, errors.USERNOTEXIST()))
                 return render_json(code=errors.USERNOTEXIST.code)
 
 
@@ -34,4 +40,5 @@ class LogicMiddleware(MiddlewareMixin):
     def process_exception(self,request,exception):
         if isinstance(exception,errors.LogicError):
             data = exception.data or str(exception)  #判断exception 是否是LogicError的实例
+            err_log.error('%s : %s' % (exception.code, data))
             return render_json(data=data,code=exception.code)

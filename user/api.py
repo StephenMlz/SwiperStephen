@@ -31,7 +31,7 @@ def check_vcode(request):
     cached_vcode = cache.get(keys.VCODE % phone)
     if vcode == cached_vcode:
         '''执行登录注册'''
-        user, _ = User.objects.get_or_create(phonenum=phone,nickname=nickname)
+        user, _ = User.get_or_create(phonenum=phone,nickname=nickname)
         request.session['uid'] = user.id
         return render_json(data=user.to_dict())
     else:
