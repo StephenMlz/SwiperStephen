@@ -32,3 +32,4 @@ PROFILE_ERR = gen_logic_err('PROFILE_ERR ',1004)
 USERNOTEXIST = gen_logic_err('USER_DoesNotExist_ERR ',1005) #用户不存在
 STYPE_ERR = gen_logic_err('STYPE_ERR ',1006)
 REWINDLIMITED = gen_logic_err('RewindLimited ',1007)
+PermissonRequired = gen_logic_err('Permission_Err ',1008)

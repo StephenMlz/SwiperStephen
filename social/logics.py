@@ -43,7 +43,7 @@ def like_someone(user,sid):
 
 def superlike_someone(user,sid):
     '''添加一条喜欢的滑动记录'''
-    Swiped.swipe(user.id, sid, 'like')
+    Swiped.swipe(user.id, sid, 'superlike')
 
     # 检查对方是否喜欢过自己,如果喜欢过，两者建立好友关系
     if Swiped.is_liked(sid, user.id):
@@ -84,10 +84,6 @@ def rewind(user):
     # now_time = datetime.datetime.now().time()
     # remain_time = 86400 - now_time.hour * 3600 - now_time.minute * 60 - now_time.second
     # cache.set(key, rewind_times, remain_time)
-
-
-
-
 
 
 
