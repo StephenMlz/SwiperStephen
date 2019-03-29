@@ -1,21 +1,8 @@
-"""swiper URL Configuration
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.11/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
 from django.conf.urls import url
 from user import api as user_api
 from social import api as social_api
+from vip import api as vip_api
 
 urlpatterns = [
     url(r'api/user/get_vcode',user_api.get_vcode),      #获取验证码 phonenum
@@ -30,4 +17,7 @@ urlpatterns = [
     url(r'api/social/superlike',social_api.superlike),#超级喜欢  sid
     url(r'api/social/rewind',social_api.rewind),    #反悔（解除好友关系）
     url(r'api/social/show_liked_me',social_api.show_liked_me),#查看谁喜欢我
+
+    url(r'api/social/top10',social_api.top10),#查看Top10
+    url(r'api/vip/show_vip',vip_api.show_vip),#查看vip权限
 ]

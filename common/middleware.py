@@ -12,6 +12,7 @@ class AuthMiddleware(MiddlewareMixin):
     WHITE_LIST = [
         '/api/user/get_vcode',
         '/api/user/check_vcode',
+        '/api/vip/show_vip'
     ]
 
     def process_request(self,request):

@@ -1,6 +1,7 @@
 from django.core.cache import cache
 
 from common import keys, errors
+from libs.cache import rds
 from social.models import Swiped
 from swiper import config
 from user.models import User
@@ -86,6 +87,40 @@ def rewind(user):
     # cache.set(key, rewind_times, remain_time)
 
 
+def add_swipe_score(swipe_view_func):
+    def wrapper(request):
+        response = swipe_view_func(request)
+
+        if 200 <= response.status_code < 300:
+            # 记录被滑动用户的积分
+            stype = swipe_view_func.__name__
+            score = config.SWIPE_SCORE[stype]
+            sid = request.POST.get('sid')
+            rds.zincrby(keys.SWIPE_RANK, score, sid)
+
+        return response
+    return wrapper
 
 
+def get_top_n(num):
+    '''获取排行前 N 的用户数据'''
+    # 数据格式
+    # origin_data = [
+    #     (b'575', 920.0),  # 第一项是 uid, 第二项是"用户积分"
+    #     (b'778', 624.0),
+    #     (b'632', 520.0),
+    # ]
+    origin_data = rds.zrevrange(keys.SWIPE_RANK,0,num-1,withscores=True)
+    print(origin_data)
+
+    #整理数据格式
+    cleaned_data= [[int(uid),int(score)] for uid,score in origin_data]
+
+    rank_data = {}
+    for rank,(uid,score) in enumerate(cleaned_data,1):
+        user = User.get(id=uid) #Note:此处可以改成批量获取，提升数据操作性能
+        user_data = user.to_dict()
+        user_data['score'] = score
+        rank_data[rank] = user_data
+    return rank_data
 
