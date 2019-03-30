@@ -102,5 +102,11 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-.idea/
-.venv/*
+.idea
+*.pyc
+*.sqlite3
+__pycache__*.log
+.venv
+medias/*
+EOF
+
