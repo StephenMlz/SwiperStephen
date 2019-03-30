@@ -4,6 +4,13 @@
 #反悔次数限制
 REWIND_LIMIT = 3
 
+# 滑动积分规则
+SWIPE_SCORE = {
+    'like': +5,
+    'superlike': +7,
+    'dislike': -5,
+}
+
 #云之讯短信平台配置
 YZX_SMS_API = 'https://open.ucpaas.com/ol/sms/sendsms'
 YZX_SMS_PARAMS = {

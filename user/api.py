@@ -31,7 +31,7 @@ def check_vcode(request):
     cached_vcode = cache.get(keys.VCODE % phone)
     if vcode == cached_vcode:
         '''执行登录注册'''
-        user, _ = User.objects.get_or_create(phonenum=phone,nickname=nickname)
+        user, _ = User.get_or_create(phonenum=phone,nickname=nickname)
         request.session['uid'] = user.id
         return render_json(data=user.to_dict())
     else:
@@ -39,8 +39,15 @@ def check_vcode(request):
 
 def get_profile(request):
     '''获取个人资料'''
-    user = request.user
-    return render_json(data=user.profile.to_dict('vibration','only_match','auto_play'))
+    key = keys.PROFILE % request.user.id
+    profile_dict = cache.get(key)
+    print('从缓存获取%s'%profile_dict)
+    if profile_dict is None:  #is  比 == 更精确
+        profile_dict = request.user.profile.to_dict()
+        print('从数据库获取%s' % profile_dict)
+        cache.set(key,profile_dict,3600)
+        print('写入缓存')
+    return render_json(data=profile_dict)
 
 
 def set_profile(request):
@@ -51,6 +58,11 @@ def set_profile(request):
         profile = form.save(commit=False) #通过调用save方法返回当前model实例
         profile.id = request.user.id
         profile.save()
+
+        #修改缓存
+        key = keys.PROFILE % request.user.id
+        cache.set(key, profile.to_dict(), 3600)
+        print('修改缓存')
         return render_json()
     else:
         raise errors.PROFILE_ERR(form.errors)  #form.errors把具体的错误传给前端
