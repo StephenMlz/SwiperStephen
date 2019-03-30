@@ -18,10 +18,10 @@ def get_vcode(request):
             print(phonenum)
             return render_json()
         else:
-            return render_json(code=errors.PLATFORM_ERR)
+            raise errors.PLATFORM_ERR
 
     else:
-        return render_json(code=errors.PHONE_ERR)
+        raise errors.PHONE_ERR()
 
 def check_vcode(request):
     '''从缓存取出验证码，并与输入的验证码进行验证，验证成功，进行注册或登录'''
@@ -40,12 +40,19 @@ def check_vcode(request):
         request.session['uid'] = user.id
         return render_json(data=user.to_dict())
     else:
-        return render_json(code=errors.VCODE_ERR)
+        raise errors.VCODE_ERR
 
 def get_profile(request):
     '''获取个人资料'''
-    user = request.user
-    return render_json(data=user.profile.to_dict('vibration','only_match','auto_play'))
+    key = keys.PROFILE % request.user.id
+    profile_dict = cache.get(key)
+    print('从缓存获取%s'%profile_dict)
+    if profile_dict is None:  #is  比 == 更精确
+        profile_dict = request.user.profile.to_dict()
+        print('从数据库获取%s' % profile_dict)
+        cache.set(key,profile_dict,3600)
+        print('写入缓存')
+    return render_json(data=profile_dict)
 
 
 def set_profile(request):
@@ -56,9 +63,14 @@ def set_profile(request):
         profile = form.save(commit=False) #通过调用save方法返回当前model实例
         profile.id = request.user.id
         profile.save()
+
+        #修改缓存
+        key = keys.PROFILE % request.user.id
+        cache.set(key, profile.to_dict(), 3600)
+        print('修改缓存')
         return render_json()
     else:
-        return render_json(form.errors,code=errors.PROFILE_ERR)  #form.errors把具体的错误传给前端
+        raise errors.PROFILE_ERR(form.errors)  #form.errors把具体的错误传给前端
 
 
 def upload_avatar(request):
@@ -66,7 +78,7 @@ def upload_avatar(request):
     user = request.user
     #获取文件
     avatar = request.FILES.get('avatar')
-
+    #celery异步调用，实现文件快速上传
     save_avatar.delay(user, avatar)
 
     return render_json()

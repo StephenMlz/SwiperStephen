@@ -15,4 +15,4 @@ def upload_qncloud(filename,filepath):
 
     #执行上传过程
     ret,info = put_file(token,filename,filepath)
-    return ret,info
+
